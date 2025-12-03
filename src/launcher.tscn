@@ -1,0 +1,183 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxie1vei3w84u"]
+
+[ext_resource type="Shader" uid="uid://dy2oqw7mip222" path="res://stripes.gdshader" id="1_35oy0"]
+[ext_resource type="Script" uid="uid://b6npyi10pruty" path="res://launcher.gd" id="1_e8q7a"]
+[ext_resource type="FontFile" uid="uid://cwvifwisu5vjg" path="res://font.ttf" id="2_e8q7a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88lnb"]
+bg_color = Color(0.122252, 0.122252, 0.122252, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kjcl2"]
+shader = ExtResource("1_35oy0")
+shader_parameter/color_gap = Color(0.25098, 1, 0.25098, 1)
+shader_parameter/color_stripe = Color(7.21961e-08, 0.672275, 9.62615e-07, 1)
+shader_parameter/divisions = 15.0
+shader_parameter/stripe_bias = 2.0
+shader_parameter/speed = 0.1
+shader_parameter/angle = 0.1
+
+[node name="Launcher" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e8q7a")
+
+[node name="URL Line" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 432.0
+offset_top = 64.0
+offset_right = 680.0
+offset_bottom = 96.0
+placeholder_text = "paste end of url here"
+context_menu_enabled = false
+emoji_menu_enabled = false
+
+[node name="URL Info" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 67.0
+offset_right = 432.0
+offset_bottom = 107.0
+text = "Tracker Page URL: https://archipelago.gg/tracker/"
+
+[node name="Launch Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 112.0
+offset_right = 1072.0
+offset_bottom = 224.0
+theme_override_font_sizes/font_size = 75
+text = "CONNECT"
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="Single Game Window" type="Window" parent="."]
+auto_translate_mode = 1
+transparent_bg = true
+title = "Pretty Progress"
+initial_position = 1
+size = Vector2i(1080, 100)
+visible = false
+unresizable = true
+transparent = true
+
+[node name="Timer" type="Timer" parent="Single Game Window"]
+wait_time = 10.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Single Game Window"]
+clip_children = 2
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 1040.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
+
+[node name="Control" type="Control" parent="Single Game Window/PanelContainer"]
+layout_mode = 2
+
+[node name="Total" type="Control" parent="Single Game Window/PanelContainer/Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -40.0
+offset_top = -30.0
+offset_bottom = 10.0
+
+[node name="total_progress" type="ColorRect" parent="Single Game Window/PanelContainer/Control/Total"]
+material = SubResource("ShaderMaterial_kjcl2")
+layout_mode = 2
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 1040.0
+offset_bottom = 70.0
+color = Color(0, 1, 0.166667, 1)
+
+[node name="total_text" type="RichTextLabel" parent="Single Game Window/PanelContainer/Control/Total"]
+clip_contents = false
+layout_mode = 0
+offset_left = 56.0
+offset_top = 37.0
+offset_right = 1024.0
+offset_bottom = 1152.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/table_v_separation = 15
+theme_override_constants/table_h_separation = 30
+theme_override_constants/outline_size = 20
+theme_override_fonts/normal_font = ExtResource("2_e8q7a")
+theme_override_font_sizes/normal_font_size = 17
+bbcode_enabled = true
+text = "[center]total checks: 20/1049[/center]"
+fit_content = true
+scroll_active = false
+metadata/_edit_lock_ = true
+
+[node name="Chosen Game" type="Control" parent="Single Game Window/PanelContainer/Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -40.0
+offset_top = -30.0
+offset_bottom = 10.0
+
+[node name="game_progress" type="ColorRect" parent="Single Game Window/PanelContainer/Control/Chosen Game"]
+material = SubResource("ShaderMaterial_kjcl2")
+layout_mode = 2
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 1040.0
+offset_bottom = 70.0
+color = Color(0, 1, 0.166667, 1)
+
+[node name="game_text" type="RichTextLabel" parent="Single Game Window/PanelContainer/Control/Chosen Game"]
+clip_contents = false
+layout_mode = 0
+offset_left = 56.0
+offset_top = 37.0
+offset_right = 1024.0
+offset_bottom = 1152.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/table_v_separation = 15
+theme_override_constants/table_h_separation = 30
+theme_override_constants/outline_size = 20
+theme_override_fonts/normal_font = ExtResource("2_e8q7a")
+theme_override_font_sizes/normal_font_size = 17
+bbcode_enabled = true
+text = "[center]total checks: 20/1049[/center]"
+fit_content = true
+scroll_active = false
+metadata/_edit_lock_ = true
+
+[node name="Error" type="ColorRect" parent="Single Game Window"]
+visible = false
+offset_left = -16.0
+offset_top = -38.0
+offset_right = 1112.0
+offset_bottom = 130.0
+color = Color(1, 0, 0, 1)
+
+[node name="game_text" type="RichTextLabel" parent="Single Game Window/Error"]
+clip_contents = false
+layout_mode = 0
+offset_left = 56.0
+offset_top = 69.0
+offset_right = 1024.0
+offset_bottom = 1184.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/table_v_separation = 15
+theme_override_constants/table_h_separation = 30
+theme_override_constants/outline_size = 20
+theme_override_fonts/normal_font = ExtResource("2_e8q7a")
+theme_override_font_sizes/normal_font_size = 17
+bbcode_enabled = true
+text = "[center]ROOM CODE ERROR - CLOSE THIS WINDOW AND TRY AGAIN[/center]"
+fit_content = true
+scroll_active = false
+
+[connection signal="pressed" from="Launch Button" to="." method="_on_launch_button_pressed"]
+[connection signal="close_requested" from="Single Game Window" to="." method="_on_single_game_window_close_requested"]
+[connection signal="timeout" from="Single Game Window/Timer" to="." method="_on_timer_timeout"]
