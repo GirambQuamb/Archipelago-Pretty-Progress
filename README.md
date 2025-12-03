@@ -1,4 +1,4 @@
-# Archipelago Pretty Progress
+# Pretty Progress
 Connects to an Archipelago Multiworld Tracker and displays a progress bar in a transparent window. Intended for streamers.
 
 ![Pretty Progress window displaying a progress bar indicating 112/386 completed checks.](images/image_1.png)
