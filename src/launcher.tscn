@@ -1,15 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cxie1vei3w84u"]
+[gd_scene load_steps=7 format=3 uid="uid://cxie1vei3w84u"]
 
 [ext_resource type="Shader" uid="uid://dy2oqw7mip222" path="res://stripes.gdshader" id="1_35oy0"]
 [ext_resource type="Script" uid="uid://b6npyi10pruty" path="res://launcher.gd" id="1_e8q7a"]
 [ext_resource type="FontFile" uid="uid://cwvifwisu5vjg" path="res://font.ttf" id="2_e8q7a"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88lnb"]
-bg_color = Color(0.122252, 0.122252, 0.122252, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+[ext_resource type="Script" uid="uid://dca08o6wjlxjo" path="res://color_picking.gd" id="2_uy6ji"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kjcl2"]
 shader = ExtResource("1_35oy0")
@@ -20,7 +14,14 @@ shader_parameter/stripe_bias = 2.0
 shader_parameter/speed = 0.1
 shader_parameter/angle = 0.1
 
-[node name="Launcher" type="Control" node_paths=PackedStringArray("http_request", "timer", "display_selection", "launch_button", "url_lineedit", "progress_window", "display_parent_a", "display_parent_b", "display_text_a", "display_text_b", "progress_bar_a", "progress_bar_b", "display_error")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88lnb"]
+bg_color = Color(0.122252, 0.122252, 0.122252, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[node name="Launcher" type="Control" node_paths=PackedStringArray("http_request", "timer", "display_selection", "url_lineedit", "color_picker_1", "color_picker_2", "color_reset_button", "launch_button", "progress_window", "display_parent_a", "display_parent_b", "display_text_a", "display_text_b", "progress_bar_a", "progress_bar_b", "display_error")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,24 +31,61 @@ grow_vertical = 2
 script = ExtResource("1_e8q7a")
 http_request = NodePath("HTTPRequest")
 timer = NodePath("Single Game Window/Timer")
-display_selection = NodePath("MenuButton")
+display_selection = NodePath("Options/Display Mode/Slot Display Mode Button")
+url_lineedit = NodePath("Options/URL/URL Line")
+color_picker_1 = NodePath("Options/Color Picking/Color Picker 1")
+color_picker_2 = NodePath("Options/Color Picking/Color Picker 2")
+color_reset_button = NodePath("Options/Color Picking/Reset Button")
 launch_button = NodePath("Launch Button")
-url_lineedit = NodePath("URL Line")
 progress_window = NodePath("Single Game Window")
-display_parent_a = NodePath("Single Game Window/PanelContainer/Control/Display Parent A")
-display_parent_b = NodePath("Single Game Window/PanelContainer/Control/Display Parent B")
-display_text_a = NodePath("Single Game Window/PanelContainer/Control/Display Parent A/Text A")
-display_text_b = NodePath("Single Game Window/PanelContainer/Control/Display Parent B/Text B")
-progress_bar_a = NodePath("Single Game Window/PanelContainer/Control/Display Parent A/Progress Bar A")
-progress_bar_b = NodePath("Single Game Window/PanelContainer/Control/Display Parent B/Progress Bar B")
+display_parent_a = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent A")
+display_parent_b = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent B")
+display_text_a = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent A/Text A")
+display_text_b = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent B/Text B")
+progress_bar_a = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent A/Progress Bar A")
+progress_bar_b = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent B/Progress Bar B")
 display_error = NodePath("Single Game Window/Error")
 
-[node name="MenuButton" type="MenuButton" parent="."]
+[node name="Options" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="URL" type="Control" parent="Options"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="URL Line" type="LineEdit" parent="Options/URL"]
 layout_mode = 0
-offset_left = 776.0
-offset_top = 16.0
-offset_right = 1000.0
-offset_bottom = 56.0
+offset_left = 400.0
+offset_top = 4.0
+offset_right = 648.0
+offset_bottom = 36.0
+placeholder_text = "paste end of url here"
+context_menu_enabled = false
+emoji_menu_enabled = false
+
+[node name="URL Info" type="RichTextLabel" parent="Options/URL"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 400.0
+offset_bottom = 48.0
+bbcode_enabled = true
+text = "[b]Tracker Page URL:[/b] https://archipelago.gg/tracker/"
+
+[node name="Display Mode" type="Control" parent="Options"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Slot Display Mode Button" type="MenuButton" parent="Options/Display Mode"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 36.0
+offset_right = 232.0
+offset_bottom = 76.0
 text = "Display Slots As:"
 flat = false
 item_count = 2
@@ -59,23 +97,66 @@ popup/item_1/text = "Game Names"
 popup/item_1/checkable = 2
 popup/item_1/id = 1
 
-[node name="URL Line" type="LineEdit" parent="."]
-layout_mode = 0
-offset_left = 432.0
+[node name="Color Picking" type="Control" parent="Options" node_paths=PackedStringArray("progress_preview", "color_picker_a", "color_picker_b")]
+anchors_preset = 0
+offset_left = 712.0
 offset_top = 64.0
-offset_right = 680.0
-offset_bottom = 96.0
-placeholder_text = "paste end of url here"
-context_menu_enabled = false
-emoji_menu_enabled = false
+offset_right = 752.0
+offset_bottom = 104.0
+pivot_offset = Vector2(0, -64)
+script = ExtResource("2_uy6ji")
+progress_preview = NodePath("Progress Bar Preview/Progress Bar")
+color_picker_a = NodePath("Color Picker 1")
+color_picker_b = NodePath("Color Picker 2")
 
-[node name="URL Info" type="RichTextLabel" parent="."]
+[node name="Color Picker 1" type="ColorPickerButton" parent="Options/Color Picking"]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 67.0
-offset_right = 432.0
-offset_bottom = 107.0
-text = "Tracker Page URL: https://archipelago.gg/tracker/"
+offset_top = -40.0
+offset_right = 32.0
+offset_bottom = -8.0
+color = Color(0.25098, 1, 0.25098, 1)
+edit_alpha = false
+
+[node name="Color Picker 2" type="ColorPickerButton" parent="Options/Color Picking"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = -40.0
+offset_right = 72.0
+offset_bottom = -8.0
+color = Color(0, 0.670588, 0, 1)
+edit_alpha = false
+
+[node name="Progress Bar Preview" type="ColorRect" parent="Options/Color Picking"]
+clip_children = 1
+layout_mode = 0
+offset_left = 184.0
+offset_top = -48.0
+offset_right = 352.0
+offset_bottom = -8.0
+
+[node name="Progress Bar" type="ColorRect" parent="Options/Color Picking/Progress Bar Preview"]
+material = SubResource("ShaderMaterial_kjcl2")
+offset_right = 1000.0
+offset_bottom = 40.0
+color = Color(0, 1, 0.166667, 1)
+metadata/_edit_lock_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Options/Color Picking"]
+layout_mode = 0
+offset_top = -64.0
+offset_right = 240.0
+offset_bottom = -24.0
+mouse_filter = 2
+bbcode_enabled = true
+text = "[b]Progress Bar Colours:[/b]"
+
+[node name="Reset Button" type="Button" parent="Options/Color Picking"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = -40.0
+offset_right = 168.0
+offset_bottom = -8.0
+text = "RESET"
 
 [node name="Launch Button" type="Button" parent="."]
 layout_mode = 0
@@ -101,7 +182,7 @@ transparent = true
 [node name="Timer" type="Timer" parent="Single Game Window"]
 wait_time = 10.0
 
-[node name="PanelContainer" type="PanelContainer" parent="Single Game Window"]
+[node name="Display Panel" type="PanelContainer" parent="Single Game Window"]
 clip_children = 2
 offset_left = 40.0
 offset_top = 30.0
@@ -109,17 +190,17 @@ offset_right = 1040.0
 offset_bottom = 70.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
 
-[node name="Control" type="Control" parent="Single Game Window/PanelContainer"]
+[node name="Display Parent" type="Control" parent="Single Game Window/Display Panel"]
 layout_mode = 2
 
-[node name="Display Parent A" type="Control" parent="Single Game Window/PanelContainer/Control"]
+[node name="Display Parent A" type="Control" parent="Single Game Window/Display Panel/Display Parent"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -40.0
 offset_top = -30.0
 offset_bottom = 10.0
 
-[node name="Progress Bar A" type="ColorRect" parent="Single Game Window/PanelContainer/Control/Display Parent A"]
+[node name="Progress Bar A" type="ColorRect" parent="Single Game Window/Display Panel/Display Parent/Display Parent A"]
 material = SubResource("ShaderMaterial_kjcl2")
 layout_mode = 2
 offset_left = 40.0
@@ -128,7 +209,7 @@ offset_right = 1040.0
 offset_bottom = 70.0
 color = Color(0, 1, 0.166667, 1)
 
-[node name="Text A" type="RichTextLabel" parent="Single Game Window/PanelContainer/Control/Display Parent A"]
+[node name="Text A" type="RichTextLabel" parent="Single Game Window/Display Panel/Display Parent/Display Parent A"]
 clip_contents = false
 layout_mode = 0
 offset_left = 56.0
@@ -147,14 +228,14 @@ fit_content = true
 scroll_active = false
 metadata/_edit_lock_ = true
 
-[node name="Display Parent B" type="Control" parent="Single Game Window/PanelContainer/Control"]
+[node name="Display Parent B" type="Control" parent="Single Game Window/Display Panel/Display Parent"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -40.0
 offset_top = -30.0
 offset_bottom = 10.0
 
-[node name="Progress Bar B" type="ColorRect" parent="Single Game Window/PanelContainer/Control/Display Parent B"]
+[node name="Progress Bar B" type="ColorRect" parent="Single Game Window/Display Panel/Display Parent/Display Parent B"]
 material = SubResource("ShaderMaterial_kjcl2")
 layout_mode = 2
 offset_left = 40.0
@@ -163,7 +244,7 @@ offset_right = 1040.0
 offset_bottom = 70.0
 color = Color(0, 1, 0.166667, 1)
 
-[node name="Text B" type="RichTextLabel" parent="Single Game Window/PanelContainer/Control/Display Parent B"]
+[node name="Text B" type="RichTextLabel" parent="Single Game Window/Display Panel/Display Parent/Display Parent B"]
 clip_contents = false
 layout_mode = 0
 offset_left = 56.0
@@ -190,7 +271,7 @@ offset_right = 1112.0
 offset_bottom = 130.0
 color = Color(1, 0, 0, 1)
 
-[node name="game_text" type="RichTextLabel" parent="Single Game Window/Error"]
+[node name="Error Text" type="RichTextLabel" parent="Single Game Window/Error"]
 clip_contents = false
 layout_mode = 0
 offset_left = 56.0
@@ -208,6 +289,9 @@ text = "[center]ROOM CODE ERROR - CLOSE THIS WINDOW AND TRY AGAIN[/center]"
 fit_content = true
 scroll_active = false
 
+[connection signal="color_changed" from="Options/Color Picking/Color Picker 1" to="Options/Color Picking" method="_on_color_picker_1_color_changed"]
+[connection signal="color_changed" from="Options/Color Picking/Color Picker 2" to="Options/Color Picking" method="_on_color_picker_2_color_changed"]
+[connection signal="pressed" from="Options/Color Picking/Reset Button" to="Options/Color Picking" method="_on_reset_button_pressed"]
 [connection signal="pressed" from="Launch Button" to="." method="_on_launch_button_pressed"]
 [connection signal="close_requested" from="Single Game Window" to="." method="_on_single_game_window_close_requested"]
 [connection signal="timeout" from="Single Game Window/Timer" to="." method="_on_timer_timeout"]

@@ -16,9 +16,18 @@ var display_mode : int = 0 # TODO - Actually give the option to show both...
 @export var timer : Timer # Used for spacing HTTPRequests and transitions
 
 ## Launch Menu ##
+
+# Options/Configures
 @export var display_selection : MenuButton # Lets the user choose how to display slot names
-@export var launch_button : Button # Launches the progress window
 @export var url_lineedit : LineEdit # User types the end of the tracker url here
+
+@export var color_picker_1 : ColorPickerButton
+@export var color_picker_2 : ColorPickerButton
+@export var color_reset_button : Button
+
+# Big awesome button
+@export var launch_button : Button # Launches the progress window
+
 
 ## Progress Window ##
 @export var progress_window : Window # Second window that displays the progress bar
@@ -61,9 +70,7 @@ func _on_launch_button_pressed() -> void:
 	reset_data()
 	initialize_text()
 	
-	display_selection.disabled = true
-	launch_button.disabled = true
-	url_lineedit.editable = false
+	disable_buttons()
 	
 	# Set URL
 	url = "https://archipelago.gg/tracker/" + url_lineedit.text
@@ -151,10 +158,7 @@ func reset_data():
 
 func _on_single_game_window_close_requested() -> void:
 	reset_data()
-	
-	launch_button.disabled = false
-	display_selection.disabled = false
-	url_lineedit.editable = true
+	enable_buttons()
 
 func populate_text():
 	start_transition()
@@ -199,3 +203,21 @@ func start_transition():
 	else:
 		tween.tween_property(display_parent_a, "modulate", Color(0,0,0,0), 2)
 		tween2.tween_property(display_parent_b, "modulate", Color(1,1,1,1), 2)
+
+func disable_buttons() -> void:
+	display_selection.disabled = true
+	launch_button.disabled = true
+	url_lineedit.editable = false
+	
+	color_picker_1.disabled = true
+	color_picker_2.disabled = true
+	color_reset_button.disabled = true
+	
+func enable_buttons() -> void:
+	launch_button.disabled = false
+	display_selection.disabled = false
+	url_lineedit.editable = true
+	
+	color_picker_1.disabled = false
+	color_picker_2.disabled = false
+	color_reset_button.disabled = false
