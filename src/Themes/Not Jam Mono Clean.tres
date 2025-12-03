@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c743ogdx0ymj5"]
+
+[ext_resource type="FontFile" uid="uid://cy3wjom066hvw" path="res://Fonts/Not Jam Mono Clean 16.ttf" id="1_llel2"]
+
+[resource]
+RichTextLabel/constants/outline_size = 15
+RichTextLabel/font_sizes/normal_font_size = 30
+RichTextLabel/fonts/normal_font = ExtResource("1_llel2")

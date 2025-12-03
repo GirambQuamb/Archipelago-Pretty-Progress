@@ -1,9 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://cxie1vei3w84u"]
+[gd_scene load_steps=8 format=3 uid="uid://cxie1vei3w84u"]
 
 [ext_resource type="Shader" uid="uid://dy2oqw7mip222" path="res://stripes.gdshader" id="1_35oy0"]
 [ext_resource type="Script" uid="uid://b6npyi10pruty" path="res://launcher.gd" id="1_e8q7a"]
-[ext_resource type="FontFile" uid="uid://cwvifwisu5vjg" path="res://font.ttf" id="2_e8q7a"]
 [ext_resource type="Script" uid="uid://dca08o6wjlxjo" path="res://color_picking.gd" id="2_uy6ji"]
+[ext_resource type="Theme" uid="uid://c743ogdx0ymj5" path="res://Themes/Not Jam Mono Clean.tres" id="4_uy6ji"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88lnb"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kjcl2"]
 shader = ExtResource("1_35oy0")
@@ -14,8 +21,8 @@ shader_parameter/stripe_bias = 2.0
 shader_parameter/speed = 0.1
 shader_parameter/angle = 0.1
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88lnb"]
-bg_color = Color(0.122252, 0.122252, 0.122252, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uy6ji"]
+bg_color = Color(0.194349, 0.194349, 0.194349, 1)
 corner_radius_top_left = 25
 corner_radius_top_right = 25
 corner_radius_bottom_right = 25
@@ -126,16 +133,34 @@ offset_bottom = -8.0
 color = Color(0, 0.670588, 0, 1)
 edit_alpha = false
 
-[node name="Progress Bar Preview" type="ColorRect" parent="Options/Color Picking"]
+[node name="Shadow Preview" type="Panel" parent="Options/Color Picking"]
 clip_children = 1
+layout_mode = 2
+offset_left = 187.0
+offset_top = -45.0
+offset_right = 355.0
+offset_bottom = -5.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
+
+[node name="Progress Bar" type="ColorRect" parent="Options/Color Picking/Shadow Preview"]
 layout_mode = 0
+offset_right = 1000.0
+offset_bottom = 40.0
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="Progress Bar Preview" type="Panel" parent="Options/Color Picking"]
+clip_children = 1
+layout_mode = 2
 offset_left = 184.0
 offset_top = -48.0
 offset_right = 352.0
 offset_bottom = -8.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
 
 [node name="Progress Bar" type="ColorRect" parent="Options/Color Picking/Progress Bar Preview"]
 material = SubResource("ShaderMaterial_kjcl2")
+layout_mode = 0
 offset_right = 1000.0
 offset_bottom = 40.0
 color = Color(0, 1, 0.166667, 1)
@@ -182,13 +207,21 @@ transparent = true
 [node name="Timer" type="Timer" parent="Single Game Window"]
 wait_time = 10.0
 
+[node name="Shadow" type="PanelContainer" parent="Single Game Window"]
+clip_children = 2
+offset_left = 43.0
+offset_top = 33.0
+offset_right = 1043.0
+offset_bottom = 73.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
+
 [node name="Display Panel" type="PanelContainer" parent="Single Game Window"]
 clip_children = 2
 offset_left = 40.0
 offset_top = 30.0
 offset_right = 1040.0
 offset_bottom = 70.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
+theme_override_styles/panel = SubResource("StyleBoxFlat_uy6ji")
 
 [node name="Display Parent" type="Control" parent="Single Game Window/Display Panel"]
 layout_mode = 2
@@ -213,20 +246,14 @@ color = Color(0, 1, 0.166667, 1)
 clip_contents = false
 layout_mode = 0
 offset_left = 56.0
-offset_top = 37.0
+offset_top = 34.0
 offset_right = 1024.0
-offset_bottom = 1152.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/table_v_separation = 15
-theme_override_constants/table_h_separation = 30
-theme_override_constants/outline_size = 20
-theme_override_fonts/normal_font = ExtResource("2_e8q7a")
-theme_override_font_sizes/normal_font_size = 17
+offset_bottom = 65.0
+theme = ExtResource("4_uy6ji")
 bbcode_enabled = true
-text = "[center]total checks: 20/1049[/center]"
+text = "[center]Total Checks: 20/1049[/center]"
 fit_content = true
 scroll_active = false
-metadata/_edit_lock_ = true
 
 [node name="Display Parent B" type="Control" parent="Single Game Window/Display Panel/Display Parent"]
 layout_mode = 3
@@ -248,20 +275,14 @@ color = Color(0, 1, 0.166667, 1)
 clip_contents = false
 layout_mode = 0
 offset_left = 56.0
-offset_top = 37.0
+offset_top = 34.0
 offset_right = 1024.0
-offset_bottom = 1152.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/table_v_separation = 15
-theme_override_constants/table_h_separation = 30
-theme_override_constants/outline_size = 20
-theme_override_fonts/normal_font = ExtResource("2_e8q7a")
-theme_override_font_sizes/normal_font_size = 17
+offset_bottom = 65.0
+theme = ExtResource("4_uy6ji")
 bbcode_enabled = true
-text = "[center]total checks: 20/1049[/center]"
+text = "[center]Total Checks: 20/1049[/center]"
 fit_content = true
 scroll_active = false
-metadata/_edit_lock_ = true
 
 [node name="Error" type="ColorRect" parent="Single Game Window"]
 visible = false
@@ -278,12 +299,7 @@ offset_left = 56.0
 offset_top = 69.0
 offset_right = 1024.0
 offset_bottom = 1184.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/table_v_separation = 15
-theme_override_constants/table_h_separation = 30
-theme_override_constants/outline_size = 20
-theme_override_fonts/normal_font = ExtResource("2_e8q7a")
-theme_override_font_sizes/normal_font_size = 17
+theme = ExtResource("4_uy6ji")
 bbcode_enabled = true
 text = "[center]ROOM CODE ERROR - CLOSE THIS WINDOW AND TRY AGAIN[/center]"
 fit_content = true
