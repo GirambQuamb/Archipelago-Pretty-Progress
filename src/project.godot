@@ -11,6 +11,8 @@ config_version=5
 [application]
 
 config/name="Archipelago Pretty Progress"
+config/description="Connects to an Archipelago Multiworld Tracker and displays a progress bar. Intended for streamers."
+config/version="0.1"
 run/main_scene="uid://cxie1vei3w84u"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/show_image=false
