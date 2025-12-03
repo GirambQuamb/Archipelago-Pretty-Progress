@@ -17,7 +17,7 @@ This program does not connect to any player slots or do any sort of logic tracki
 - Option to display slots as `player` names or `game` names
 
 ## Usage
-Download the latest release from the [releases page](https://github.com/GirambQuamb/Archipelago-Pretty-Progress/releases), extract `Pretty_Progress_x.x.zip`, and run `Pretty Progress.exe`, ensuring it is in the same folder as `Pretty Progress.pck`.
+Download the latest release from the [releases page](https://github.com/GirambQuamb/Archipelago-Pretty-Progress/releases), extract `Pretty_Progress_x.x.x.zip`, and run `Pretty Progress.exe`, ensuring it is in the same folder as `Pretty Progress.pck`.
 
 This will launch the `PPLauncher` window, in which you can paste the end of a Multiworld Tracker URL, select whether you want to display `player` or `game` names, and customize the progress bar colours.
 
