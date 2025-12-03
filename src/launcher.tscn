@@ -18,7 +18,7 @@ shader_parameter/color_gap = Color(0.25098, 1, 0.25098, 1)
 shader_parameter/color_stripe = Color(7.21961e-08, 0.672275, 9.62615e-07, 1)
 shader_parameter/divisions = 15.0
 shader_parameter/stripe_bias = 2.0
-shader_parameter/speed = 0.1
+shader_parameter/speed = 0.04
 shader_parameter/angle = 0.1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uy6ji"]
@@ -52,6 +52,13 @@ display_text_b = NodePath("Single Game Window/Display Panel/Display Parent/Displ
 progress_bar_a = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent A/Progress Bar A")
 progress_bar_b = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent B/Progress Bar B")
 display_error = NodePath("Single Game Window/Error")
+title_eggs = Array[String](["Sent Structure Compass (My Heart)", "Giving Guards Tea Since 2004", "chrisWOW chrisWOW chrisWOW", "Downgraded to Allow Full Gold Jumps", "Still Waiting for Oak's Parcel", "BK'd Until You Get the Spade Key", "Dying to Reznor Since 1990", "Sending Death Links at Inopportune Moments", "Sending Hardmode Way Too Early", "You Know Why They Call Him Trinexx?", "Won't Stop BLJing Out of Logic", "Enabling Grasssanity", "Glitching Into Richard's Backyard", "Bomb Triggering the Egg", "Updating an apworld Without Telling the Host", "Please Don't Make Me Do Dive Checks", "Wait, Where Do I Buy Poke Balls Now?", "Currently Headed Away From the Thing You Need"])
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1080.0
+offset_bottom = 240.0
+color = Color(0.340339, 0.340339, 0.340339, 1)
 
 [node name="Options" type="Control" parent="."]
 anchors_preset = 0
@@ -106,9 +113,9 @@ popup/item_1/id = 1
 
 [node name="Color Picking" type="Control" parent="Options" node_paths=PackedStringArray("progress_preview", "color_picker_a", "color_picker_b")]
 anchors_preset = 0
-offset_left = 712.0
+offset_left = 904.0
 offset_top = 64.0
-offset_right = 752.0
+offset_right = 944.0
 offset_bottom = 104.0
 pivot_offset = Vector2(0, -64)
 script = ExtResource("2_uy6ji")
@@ -118,28 +125,28 @@ color_picker_b = NodePath("Color Picker 2")
 
 [node name="Color Picker 1" type="ColorPickerButton" parent="Options/Color Picking"]
 layout_mode = 0
-offset_top = -40.0
+offset_top = -56.0
 offset_right = 32.0
-offset_bottom = -8.0
+offset_bottom = -24.0
 color = Color(0.25098, 1, 0.25098, 1)
 edit_alpha = false
 
 [node name="Color Picker 2" type="ColorPickerButton" parent="Options/Color Picking"]
 layout_mode = 0
 offset_left = 40.0
-offset_top = -40.0
+offset_top = -56.0
 offset_right = 72.0
-offset_bottom = -8.0
+offset_bottom = -24.0
 color = Color(0, 0.670588, 0, 1)
 edit_alpha = false
 
 [node name="Shadow Preview" type="Panel" parent="Options/Color Picking"]
 clip_children = 1
 layout_mode = 2
-offset_left = 187.0
-offset_top = -45.0
-offset_right = 355.0
-offset_bottom = -5.0
+offset_left = 3.0
+offset_top = -13.0
+offset_right = 171.0
+offset_bottom = 27.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
 
 [node name="Progress Bar" type="ColorRect" parent="Options/Color Picking/Shadow Preview"]
@@ -152,10 +159,9 @@ metadata/_edit_lock_ = true
 [node name="Progress Bar Preview" type="Panel" parent="Options/Color Picking"]
 clip_children = 1
 layout_mode = 2
-offset_left = 184.0
-offset_top = -48.0
-offset_right = 352.0
-offset_bottom = -8.0
+offset_top = -16.0
+offset_right = 168.0
+offset_bottom = 24.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_88lnb")
 
 [node name="Progress Bar" type="ColorRect" parent="Options/Color Picking/Progress Bar Preview"]
@@ -166,21 +172,12 @@ offset_bottom = 40.0
 color = Color(0, 1, 0.166667, 1)
 metadata/_edit_lock_ = true
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Options/Color Picking"]
-layout_mode = 0
-offset_top = -64.0
-offset_right = 240.0
-offset_bottom = -24.0
-mouse_filter = 2
-bbcode_enabled = true
-text = "[b]Progress Bar Colours:[/b]"
-
 [node name="Reset Button" type="Button" parent="Options/Color Picking"]
 layout_mode = 0
 offset_left = 80.0
-offset_top = -40.0
+offset_top = -56.0
 offset_right = 168.0
-offset_bottom = -8.0
+offset_bottom = -24.0
 text = "RESET"
 
 [node name="Launch Button" type="Button" parent="."]

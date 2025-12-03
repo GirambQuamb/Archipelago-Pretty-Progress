@@ -39,8 +39,13 @@ var display_mode : int = 0 # TODO - Actually give the option to show both...
 @export var progress_bar_b : ColorRect
 @export var display_error : ColorRect # Error message
 
+## Window Title Easter Egg ##
+@export var title_eggs : Array[String]
+
 # Initialize the scene
 func _ready() -> void:
+	# Set main window title
+	get_window().title = "PPLauncher | %s" % title_eggs.pick_random()
 	# Initialize text
 	initialize_text()
 	
