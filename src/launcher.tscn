@@ -201,7 +201,7 @@ offset_left = 272.0
 offset_top = 64.0
 offset_right = 296.0
 offset_bottom = 88.0
-text = "Hide Completed Games"
+text = "Hide Completed Slots"
 
 [node name="Launch Button" type="Button" parent="."]
 layout_mode = 0
