@@ -193,12 +193,6 @@ offset_left = 272.0
 offset_top = 40.0
 offset_right = 296.0
 offset_bottom = 64.0
-
-[node name="Percentage Label" type="RichTextLabel" parent="Options/Toggles/Percentage Check"]
-layout_mode = 0
-offset_left = 24.0
-offset_right = 240.0
-offset_bottom = 24.0
 text = "Show Checks as Percentage"
 
 [node name="Completed Games Check" type="CheckBox" parent="Options/Toggles"]
@@ -207,12 +201,6 @@ offset_left = 272.0
 offset_top = 64.0
 offset_right = 296.0
 offset_bottom = 88.0
-
-[node name="Completed Label" type="RichTextLabel" parent="Options/Toggles/Completed Games Check"]
-layout_mode = 0
-offset_left = 24.0
-offset_right = 240.0
-offset_bottom = 24.0
 text = "Hide Completed Games"
 
 [node name="Launch Button" type="Button" parent="."]
