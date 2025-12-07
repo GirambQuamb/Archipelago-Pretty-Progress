@@ -36,7 +36,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_e8q7a")
-http_request = NodePath("HTTPRequest")
+http_request = NodePath("HTTP Request")
 timer = NodePath("Single Game Window/Timer")
 display_selection = NodePath("Options/Display Mode/Slot Display Mode Button")
 url_lineedit = NodePath("Options/URL/URL Line")
@@ -72,11 +72,11 @@ offset_bottom = 40.0
 
 [node name="URL Line" type="LineEdit" parent="Options/URL"]
 layout_mode = 0
-offset_left = 400.0
-offset_top = 4.0
-offset_right = 648.0
-offset_bottom = 36.0
-placeholder_text = "paste end of url here"
+offset_left = 104.0
+offset_top = 3.0
+offset_right = 448.0
+offset_bottom = 35.0
+placeholder_text = "https://archipelago.gg/room/[room_code]"
 context_menu_enabled = false
 emoji_menu_enabled = false
 
@@ -84,10 +84,10 @@ emoji_menu_enabled = false
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 400.0
+offset_right = 104.0
 offset_bottom = 48.0
 bbcode_enabled = true
-text = "[b]Tracker Page URL:[/b] https://archipelago.gg/tracker/"
+text = "[b]ROOM URL:[/b]"
 
 [node name="Display Mode" type="Control" parent="Options"]
 anchors_preset = 0
@@ -97,9 +97,9 @@ offset_bottom = 40.0
 [node name="Slot Display Mode Button" type="MenuButton" parent="Options/Display Mode"]
 layout_mode = 0
 offset_left = 8.0
-offset_top = 36.0
+offset_top = 40.0
 offset_right = 232.0
-offset_bottom = 76.0
+offset_bottom = 80.0
 text = "Display Slots As:"
 flat = false
 item_count = 2
@@ -189,7 +189,7 @@ offset_bottom = 224.0
 theme_override_font_sizes/font_size = 75
 text = "CONNECT"
 
-[node name="HTTPRequest" type="HTTPRequest" parent="."]
+[node name="HTTP Request" type="HTTPRequest" parent="."]
 
 [node name="Single Game Window" type="Window" parent="."]
 auto_translate_mode = 1
@@ -298,7 +298,7 @@ offset_right = 1024.0
 offset_bottom = 1184.0
 theme = ExtResource("4_uy6ji")
 bbcode_enabled = true
-text = "[center]ROOM CODE ERROR - CLOSE THIS WINDOW AND TRY AGAIN[/center]"
+text = "[center]ROOM ERROR - CLOSE THIS WINDOW AND TRY AGAIN[/center]"
 fit_content = true
 scroll_active = false
 

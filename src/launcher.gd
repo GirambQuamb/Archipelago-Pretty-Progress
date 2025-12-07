@@ -1,10 +1,15 @@
 extends Control
 
 ### Global variables ###
-var url : String # Multiworld tracker URL
+var url : String # Room URL
+var tracker_id : String # Tracker suuid
+
+enum Request {ROOM, TOTALS, PROGRESS}
+var request_type : int = Request.ROOM
 
 var slot_data : Dictionary # Slot info (player, game, progress)
-var slot_index : int = 0 # Used for progressing through slots
+var slot_index : int = 0 # Used for progressing through slots for data
+var chosen_slot_index : int = 0 # Used for progressing through slots for display
 
 enum Display_Mode {PLAYER, GAME, BOTH} # Whether to show players, games or both
 var display_mode : int = 0 # TODO - Actually give the option to show both...
@@ -52,13 +57,13 @@ func _ready() -> void:
 	# Initialize subwindow transparency
 	display_parent_a.modulate.a = 0
 	
-	progress_window.visible = false
+	hide_tracker()
 	
-	http_request.request_completed.connect(_on_request_completed)
+	http_request.request_completed.connect(http_request_completed)
 	
-	display_selection.get_popup().id_pressed.connect(_on_menu_button_pressed)
+	display_selection.get_popup().id_pressed.connect(select_slot_option)
 
-func _on_menu_button_pressed(id : int) -> void:
+func select_slot_option(id : int) -> void:
 	display_mode = id
 	for i in range(0,display_selection.get_popup().item_count):
 		display_selection.get_popup().set_item_checked(i, false)
@@ -78,88 +83,90 @@ func _on_launch_button_pressed() -> void:
 	disable_buttons()
 	
 	# Set URL
-	url = "https://archipelago.gg/tracker/" + url_lineedit.text
+	url = url_lineedit.text
 	
-	# Validate URL
-	## Used to have something here... but that was before git lol
+	request_room()
+
+func request_room():
+	show_tracker()
+	if url.contains("/room/"):
+		http_request.request(url.split("/room/")[0] + "/api/room_status/" + url.split("/room/")[1])
+		display_error.visible = false
+	else:
+		display_error.visible = true
+
+func http_request_completed(_result, _response_code, _headers, _body):
+	if _response_code == 200:
+		var parse_result = JSON.parse_string(_body.get_string_from_utf8())
+		if parse_result is Dictionary:
+			match request_type:
+				Request.ROOM:
+					set_slot_data(parse_result)
+				Request.TOTALS:
+					set_total_data(parse_result)
+				Request.PROGRESS:
+					set_progress_data(parse_result)
+		else:
+			display_error.visible = true
+	else:
+		display_error.visible = true
+
+func set_slot_data(room_data):
+	for player in room_data["players"]:
+		slot_data[slot_index] = {
+			"player": player[0],
+			"game": player[1],
+			"progress": "",
+			"total": ""
+		}
+		slot_index += 1
 	
-	# Send http request
-	http_request.request(url)
+	slot_data[slot_index] = {
+		"player": "Total Checks",
+		"game": "Total Checks",
+		"progress": "",
+		"total": ""
+	}
 	
-	progress_window.visible = true
-	display_error.visible = false
+	slot_index = 0
+	request_type = Request.TOTALS
+	tracker_id = room_data["tracker"]
+	http_request.request(url.split("/room/")[0] + "/api/static_tracker/" + tracker_id)
+
+func set_total_data(total_data):
+	var total = 0
+	for player in total_data["player_locations_total"]:
+		slot_data[slot_index]["total"] = player["total_locations"]
+		
+		total += int(player["total_locations"])
+		slot_index += 1
+	
+	slot_data[slot_index]["total"] = str(total)
+	
+	slot_index = 0
+	request_type = Request.PROGRESS
+	http_request.request(url.split("/room/")[0] + "/api/tracker/" + tracker_id)
 	
 	timer.start()
 
-func _on_request_completed(_result, _response_code, _headers, _body):
-	if _response_code == 200: # idk what this response code means but it works
-		populate_data(_body)
-	else:
-		display_error.visible = true
+func set_progress_data(progress_data):
+	for player in progress_data["player_checks_done"]:
+		slot_data[slot_index]["progress"] = player["locations"].size()
 		
-
-func populate_data(_body):
-	# Get the table, just the games no header or footer
-	var table = _body.get_string_from_utf8().split('<tbody>')[1].split('</tbody>')[0]
+		slot_index += 1
 	
-	# Regular expressions... eww!
-	
-	## GAME DATA
-	var regex = RegEx.new()
-	regex.compile('<td.*?>(.|\n)*?</td>')
-	
-	# Number of games
-	var game_count = regex.search_all(table).size()/7
-	
-	# Currently parsed slot
-	var current_slot = ""
-	# Currently parsed slot's player
-	var current_player = ""
-	# Currently parsed slot's game
-	var current_game = ""
-	# Currently parsed slot's progress
-	var current_progress = ""
-	
-	
-	# Column counter, 1 for player, 2 for game, 4 for progress
-	var column = 0
-	for result in regex.search_all(table):
-		if column %7 == 0:
-			current_slot = result.get_string().split('>')[2].split('<')[0].strip_edges().replace("&#39;", "'")
-		elif column %7 == 1:
-			current_player = result.get_string().split('>')[1].split('<')[0].strip_edges().replace("&#39;", "'")
-		elif column % 7 == 2:
-			current_game = result.get_string().split('>')[1].split('<')[0].strip_edges().replace("&#39;", "'")
-		elif column % 7 == 4:
-			current_progress = result.get_string().split('>')[1].split('<')[0].strip_edges()
-		
-		slot_data[current_slot] = {
-			"player": current_player,
-			"game": current_game,
-			"progress": current_progress
-		}
-		column+=1
-	
-	## ALL DATA
-	table = _body.get_string_from_utf8().split('<tfoot>')[1].split('</tfoot>')[0]
-	
-	regex.compile('<td.*?>(.|\n)*?</td>')
-	var total_checks = regex.search_all(table)[3].get_string().split('>')[1].split('<')[0].strip_edges()
-	
-	slot_data["TOTAL"] = {
-		"player": "Total Checks",
-		"game": "Total Checks",
-		"progress": total_checks
-	}
+	slot_data[slot_index]["progress"] = progress_data["total_checks_done"][0]["checks_done"]
 	
 	populate_text()
-	
+	slot_index = 0
 
 func reset_data():
-	progress_window.visible = false
+	hide_tracker()
 	timer.stop()
 	slot_index = 0
+	chosen_slot_index = 0
 	slot_data.clear()
+	request_type = Request.ROOM
 
 func _on_single_game_window_close_requested() -> void:
 	reset_data()
@@ -168,36 +175,35 @@ func _on_single_game_window_close_requested() -> void:
 func populate_text():
 	start_transition()
 	
-	# Expression for math
-	var expression = Expression.new()
-	
 	# Choose a slot to display
-	var chosen_slot = slot_data.keys()[slot_index % slot_data.keys().size()]
+	var chosen_slot = slot_data.keys()[chosen_slot_index % slot_data.keys().size()]
 	
-	if slot_index % 2 == 0:
+	# Checks as fraction
+	var check_fraction = "%s/%s" % [str(slot_data[chosen_slot]["progress"]).replace(".0",""), str(slot_data[chosen_slot]["total"]).replace(".0","")]
+	# Checks as percentage
+	var check_percentage = float(slot_data[chosen_slot]["progress"])/float(slot_data[chosen_slot]["total"])
+	
+	if chosen_slot_index % 2 == 0:
 		## NODE 1
-		expression.parse(slot_data[chosen_slot]["progress"]+".0")
-		match display_mode:
-			Display_Mode.PLAYER:
-				display_text_a.text = "[center]%s: %s[/center]" % [slot_data[chosen_slot]["player"], slot_data[chosen_slot]["progress"]]
-			Display_Mode.GAME:
-				display_text_a.text = "[center]%s: %s[/center]" % [slot_data[chosen_slot]["game"], slot_data[chosen_slot]["progress"]]
-		progress_bar_a.position.x = expression.execute() * 1000 - 1000+40
+		set_text(display_text_a, chosen_slot, check_fraction)
+		progress_bar_a.position.x = check_percentage * 1000 - 1000+40
 	else:
 		## NODE 2
-		expression.parse(slot_data[chosen_slot]["progress"]+".0")
-		match display_mode:
-			Display_Mode.PLAYER:
-				display_text_b.text = "[center]%s: %s[/center]" % [slot_data[chosen_slot]["player"], slot_data[chosen_slot]["progress"]]
-			Display_Mode.GAME:
-				display_text_b.text = "[center]%s: %s[/center]" % [slot_data[chosen_slot]["game"], slot_data[chosen_slot]["progress"]]
-		progress_bar_b.position.x = expression.execute() * 1000 - 1000+40
+		set_text(display_text_b, chosen_slot, check_fraction)
+		progress_bar_b.position.x = check_percentage * 1000 - 1000+40
 	
 	# Move to the next slot
-	slot_index += 1
+	chosen_slot_index += 1
+
+func set_text(text_label : RichTextLabel, _slot : int, _checks : String):
+	match display_mode:
+		Display_Mode.PLAYER:
+			text_label.text = "[center]%s: %s[/center]" % [slot_data[_slot]["player"], _checks]
+		Display_Mode.GAME:
+			text_label.text = "[center]%s: %s[/center]" % [slot_data[_slot]["game"], _checks]
 
 func _on_timer_timeout() -> void:
-	http_request.request(url)
+	http_request.request(url.split("/room/")[0] + "/api/tracker/" + tracker_id)
 	
 func start_transition():
 	var tween = get_tree().create_tween()
@@ -226,3 +232,9 @@ func enable_buttons() -> void:
 	color_picker_1.disabled = false
 	color_picker_2.disabled = false
 	color_reset_button.disabled = false
+
+func show_tracker() -> void:
+	progress_window.visible = true
+	
+func hide_tracker() -> void:
+	progress_window.visible = false
