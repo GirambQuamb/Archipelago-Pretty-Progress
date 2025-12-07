@@ -28,7 +28,7 @@ corner_radius_top_right = 25
 corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 
-[node name="Launcher" type="Control" node_paths=PackedStringArray("http_request", "timer", "display_selection", "url_lineedit", "color_picker_1", "color_picker_2", "color_reset_button", "launch_button", "progress_window", "display_parent_a", "display_parent_b", "display_text_a", "display_text_b", "progress_bar_a", "progress_bar_b", "display_error")]
+[node name="Launcher" type="Control" node_paths=PackedStringArray("http_request", "timer", "display_selection", "url_lineedit", "color_picker_1", "color_picker_2", "color_reset_button", "percentage_toggle", "completed_toggle", "launch_button", "progress_window", "display_parent_a", "display_parent_b", "display_text_a", "display_text_b", "progress_bar_a", "progress_bar_b", "display_error")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,6 +43,8 @@ url_lineedit = NodePath("Options/URL/URL Line")
 color_picker_1 = NodePath("Options/Color Picking/Color Picker 1")
 color_picker_2 = NodePath("Options/Color Picking/Color Picker 2")
 color_reset_button = NodePath("Options/Color Picking/Reset Button")
+percentage_toggle = NodePath("Options/Toggles/Percentage Check")
+completed_toggle = NodePath("Options/Toggles/Completed Games Check")
 launch_button = NodePath("Launch Button")
 progress_window = NodePath("Single Game Window")
 display_parent_a = NodePath("Single Game Window/Display Panel/Display Parent/Display Parent A")
@@ -180,6 +182,39 @@ offset_right = 168.0
 offset_bottom = -24.0
 text = "RESET"
 
+[node name="Toggles" type="Control" parent="Options"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Percentage Check" type="CheckBox" parent="Options/Toggles"]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 40.0
+offset_right = 296.0
+offset_bottom = 64.0
+
+[node name="Percentage Label" type="RichTextLabel" parent="Options/Toggles/Percentage Check"]
+layout_mode = 0
+offset_left = 24.0
+offset_right = 240.0
+offset_bottom = 24.0
+text = "Show Checks as Percentage"
+
+[node name="Completed Games Check" type="CheckBox" parent="Options/Toggles"]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 64.0
+offset_right = 296.0
+offset_bottom = 88.0
+
+[node name="Completed Label" type="RichTextLabel" parent="Options/Toggles/Completed Games Check"]
+layout_mode = 0
+offset_left = 24.0
+offset_right = 240.0
+offset_bottom = 24.0
+text = "Hide Completed Games"
+
 [node name="Launch Button" type="Button" parent="."]
 layout_mode = 0
 offset_left = 8.0
@@ -203,6 +238,7 @@ transparent = true
 
 [node name="Timer" type="Timer" parent="Single Game Window"]
 wait_time = 10.0
+one_shot = true
 
 [node name="Shadow" type="PanelContainer" parent="Single Game Window"]
 clip_children = 2

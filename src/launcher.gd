@@ -14,6 +14,8 @@ var chosen_slot_index : int = 0 # Used for progressing through slots for display
 enum Display_Mode {PLAYER, GAME, BOTH} # Whether to show players, games or both
 var display_mode : int = 0 # TODO - Actually give the option to show both...
 
+var check_display : String # How checks are displayed as a string (% vs fraction)
+
 ### Node variables ###
 
 ## Helpers ##
@@ -29,6 +31,9 @@ var display_mode : int = 0 # TODO - Actually give the option to show both...
 @export var color_picker_1 : ColorPickerButton
 @export var color_picker_2 : ColorPickerButton
 @export var color_reset_button : Button
+
+@export var percentage_toggle : CheckBox
+@export var completed_toggle : CheckBox
 
 # Big awesome button
 @export var launch_button : Button # Launches the progress window
@@ -146,19 +151,30 @@ func set_total_data(total_data):
 	slot_index = 0
 	request_type = Request.PROGRESS
 	http_request.request(url.split("/room/")[0] + "/api/tracker/" + tracker_id)
-	
-	timer.start()
 
 func set_progress_data(progress_data):
 	for player in progress_data["player_checks_done"]:
-		slot_data[slot_index]["progress"] = player["locations"].size()
-		
+		if slot_data.keys().has(slot_index):
+			slot_data[slot_index]["progress"] = player["locations"].size()
+			# Mark completed games as such
+			if int(slot_data[slot_index]["progress"]) == int(slot_data[slot_index]["total"]):
+				slot_data[slot_index]["completed"] = true
+			else:
+				slot_data[slot_index]["completed"] = false
 		slot_index += 1
 	
 	slot_data[slot_index]["progress"] = progress_data["total_checks_done"][0]["checks_done"]
+	slot_data[slot_index]["completed"] = false
+	
+	if completed_toggle.button_pressed:
+		for slot in slot_data:
+			if slot_data[slot]["completed"]:
+				slot_data.erase(slot)
 	
 	populate_text()
 	slot_index = 0
+	
+	timer.start()
 
 func reset_data():
 	hide_tracker()
@@ -182,14 +198,20 @@ func populate_text():
 	var check_fraction = "%s/%s" % [str(slot_data[chosen_slot]["progress"]).replace(".0",""), str(slot_data[chosen_slot]["total"]).replace(".0","")]
 	# Checks as percentage
 	var check_percentage = float(slot_data[chosen_slot]["progress"])/float(slot_data[chosen_slot]["total"])
+	# Chosen check display
+	if percentage_toggle.button_pressed:
+		check_display = "%0.2f%%" % (check_percentage*100)
+	else:
+		check_display = check_fraction
+	
 	
 	if chosen_slot_index % 2 == 0:
 		## NODE 1
-		set_text(display_text_a, chosen_slot, check_fraction)
+		set_text(display_text_a, chosen_slot, check_display)
 		progress_bar_a.position.x = check_percentage * 1000 - 1000+40
 	else:
 		## NODE 2
-		set_text(display_text_b, chosen_slot, check_fraction)
+		set_text(display_text_b, chosen_slot, check_display)
 		progress_bar_b.position.x = check_percentage * 1000 - 1000+40
 	
 	# Move to the next slot
@@ -224,6 +246,9 @@ func disable_buttons() -> void:
 	color_picker_2.disabled = true
 	color_reset_button.disabled = true
 	
+	percentage_toggle.disabled = true
+	completed_toggle.disabled = true
+	
 func enable_buttons() -> void:
 	launch_button.disabled = false
 	display_selection.disabled = false
@@ -232,6 +257,9 @@ func enable_buttons() -> void:
 	color_picker_1.disabled = false
 	color_picker_2.disabled = false
 	color_reset_button.disabled = false
+	
+	percentage_toggle.disabled = false
+	completed_toggle.disabled = false
 
 func show_tracker() -> void:
 	progress_window.visible = true
