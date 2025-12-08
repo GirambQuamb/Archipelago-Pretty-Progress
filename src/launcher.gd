@@ -91,6 +91,8 @@ func _on_launch_button_pressed() -> void:
 	url = url_lineedit.text
 	
 	request_room()
+	
+	timer.start()
 
 func request_room():
 	show_tracker()
@@ -166,15 +168,18 @@ func set_progress_data(progress_data):
 	slot_data[slot_index]["progress"] = progress_data["total_checks_done"][0]["checks_done"]
 	slot_data[slot_index]["completed"] = false
 	
+	var completed_slots = []
+	
 	if completed_toggle.button_pressed:
 		for slot in slot_data:
 			if slot_data[slot]["completed"]:
-				slot_data.erase(slot)
+				completed_slots.append(slot)
+	
+		for slot in completed_slots:
+			slot_data.erase(slot)
 	
 	populate_text()
 	slot_index = 0
-	
-	timer.start()
 
 func reset_data():
 	hide_tracker()
@@ -226,6 +231,8 @@ func set_text(text_label : RichTextLabel, _slot : int, _checks : String):
 
 func _on_timer_timeout() -> void:
 	http_request.request(url.split("/room/")[0] + "/api/tracker/" + tracker_id)
+	await http_request.request_completed
+	timer.start(10)
 	
 func start_transition():
 	var tween = get_tree().create_tween()

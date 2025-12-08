@@ -225,7 +225,7 @@ unresizable = true
 transparent = true
 
 [node name="Timer" type="Timer" parent="Single Game Window"]
-wait_time = 10.0
+wait_time = 15.0
 one_shot = true
 
 [node name="Shadow" type="PanelContainer" parent="Single Game Window"]
